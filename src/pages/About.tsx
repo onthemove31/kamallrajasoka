@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
@@ -44,7 +43,7 @@ export default function About() {
             <h2 className="text-2xl font-bold tracking-tight mb-4">Who I Am</h2>
             <div className="prose prose-lg dark:prose-invert max-w-none">
               <p>
-                Hey there! I'm Drew, a developer and chronic side-project starter based in San Francisco.
+                Hey there! I'm Kamallraj A, a developer and chronic side-project starter based in San Francisco.
                 I work as a frontend engineer by day, building user interfaces for fintech products. By night
                 (and weekends), I dive into personal projects ranging from game tracking tools to
                 photography experiments.
