@@ -75,9 +75,23 @@ export default function LabPage() {
           Welcome to my digital workshop. Here's where I experiment with new ideas and unfinished projects.
         </p>
       </motion.div>
-
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {[1, 2, 3, 4, 5, 6].map((i) => (
+        <Card className="overflow-hidden">
+          <CardHeader>
+            <CardTitle>Updated Portfolio</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground mb-4">
+              A new version of my portfolio built with Vite and React, currently in development.
+            </p>
+            <Button asChild className="w-full">
+              <a href="/updated/index.html" target="_blank" rel="noopener noreferrer">
+                View Project
+              </a>
+            </Button>
+          </CardContent>
+        </Card>
+        {[1, 2, 3, 4, 5].map((i) => (
           <Card key={i} className="overflow-hidden">
             <CardHeader>
               <CardTitle>Experiment #{i}</CardTitle>
