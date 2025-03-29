@@ -17,6 +17,23 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
+  // Add rewrites for subdomain handling
+  async rewrites() {
+    return {
+      beforeFiles: [
+        {
+          source: '/:path*',
+          has: [
+            {
+              type: 'host',
+              value: 'dev.kamallrajasoka.com',
+            },
+          ],
+          destination: '/updated/:path*',
+        },
+      ],
+    }
+  },
   webpack: (config, { dev, isServer }) => {
     // Optimization configurations
     config.optimization.moduleIds = 'deterministic';

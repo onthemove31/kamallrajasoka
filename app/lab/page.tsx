@@ -97,13 +97,9 @@ export default function LabPage() {
                 variant="default"
               >
                 <a 
-                  href="http://localhost:5173" 
+                  href="https://dev.kamallrajasoka.com" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  onClick={(e) => {
-                    e.preventDefault()
-                    window.open('http://localhost:5173', '_blank', 'noopener,noreferrer')
-                  }}
                 >
                   View Project
                 </a>
