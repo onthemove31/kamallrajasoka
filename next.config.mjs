@@ -17,7 +17,7 @@ const nextConfig = {
   compiler: {
     removeConsole: process.env.NODE_ENV === 'production',
   },
-  // Add rewrites for subdomain handling
+  // Handle subdomain routing
   async rewrites() {
     return {
       beforeFiles: [
@@ -29,7 +29,7 @@ const nextConfig = {
               value: 'dev.kamallrajasoka.com',
             },
           ],
-          destination: '/updated/:path*',
+          destination: 'https://dev-portfolio.vercel.app/:path*',
         },
       ],
     }
