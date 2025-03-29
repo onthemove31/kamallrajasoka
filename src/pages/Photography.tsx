@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { photoTags, getPhotosByTag } from "@/data/photos";
 import PhotoCard from "@/components/PhotoCard";
