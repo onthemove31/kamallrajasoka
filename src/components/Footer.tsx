@@ -1,4 +1,3 @@
-
 import { Github, Twitter } from "lucide-react";
 import { Link } from "react-router-dom";
 import { useTheme } from "@/hooks/use-theme";
@@ -49,13 +48,7 @@ export default function Footer() {
               </a>
             </div>
             <p className="text-xs text-muted-foreground">
-              © {currentYear} <img 
-                src={theme === "dark" 
-                  ? "/lovable-uploads/dd8e36c7-07fa-48af-9e62-31c340d327ed.png" 
-                  : "/lovable-uploads/fd8c7fe3-0917-4595-a273-3afc1be09a1b.png"} 
-                alt="Signature" 
-                className="h-4 inline-block mx-1"
-              /> Myers. Built with React + Tailwind.
+              © 2025 Kamallraj. Built with React + Tailwind.
             </p>
           </div>
         </div>
