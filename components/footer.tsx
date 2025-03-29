@@ -1,35 +1,48 @@
+"use client"
+import { memo } from "react"
 import Link from "next/link"
 import { Github, Twitter } from "lucide-react"
 
-export default function Footer() {
+const SocialLink = memo(({ href, label, icon: Icon }: {
+  href: string;
+  label: string;
+  icon: typeof Github | typeof Twitter;
+}) => (
+  <Link
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    className="text-muted-foreground transition-colors hover:text-foreground"
+    aria-label={label}
+  >
+    <Icon className="h-5 w-5" aria-hidden="true" />
+  </Link>
+));
+SocialLink.displayName = 'SocialLink';
+
+export default memo(function Footer() {
+  const currentYear = new Date().getFullYear();
+  
   return (
     <footer className="border-t py-6">
       <div className="container flex flex-col items-center justify-between gap-4 md:flex-row">
         <p className="text-center text-sm text-muted-foreground">
-          &copy; {new Date().getFullYear()} · Built with Next.js + Tailwind
+          &copy; {currentYear} · Built with Next.js + Tailwind
         </p>
-        <div className="flex items-center gap-4">
-          <Link
+        <nav className="flex items-center gap-4" aria-label="Social links">
+          <SocialLink
             href="https://github.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Github className="h-5 w-5" />
-            <span className="sr-only">GitHub</span>
-          </Link>
-          <Link
+            label="Visit GitHub profile"
+            icon={Github}
+          />
+          <SocialLink
             href="https://twitter.com"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-foreground"
-          >
-            <Twitter className="h-5 w-5" />
-            <span className="sr-only">Twitter</span>
-          </Link>
-        </div>
+            label="Visit Twitter profile"
+            icon={Twitter}
+          />
+        </nav>
       </div>
     </footer>
   )
-}
+});
 
