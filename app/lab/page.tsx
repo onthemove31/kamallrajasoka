@@ -1,13 +1,12 @@
 "use client"
 
 import type React from "react"
-
 import { useState } from "react"
 import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Lock } from "lucide-react"
+import { Lock, ExternalLink } from "lucide-react"
 
 export default function LabPage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false)
@@ -76,21 +75,42 @@ export default function LabPage() {
         </p>
       </motion.div>
       <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-        <Card className="overflow-hidden">
-          <CardHeader>
-            <CardTitle>Updated Portfolio</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-muted-foreground mb-4">
-              A new version of my portfolio built with Vite and React, currently in development.
-            </p>
-            <Button asChild className="w-full">
-              <a href="/updated/index.html" target="_blank" rel="noopener noreferrer">
-                View Project
-              </a>
-            </Button>
-          </CardContent>
-        </Card>
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card className="overflow-hidden transition-all hover:shadow-lg">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                Updated Portfolio
+                <ExternalLink className="h-5 w-5 text-muted-foreground" />
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <p className="text-muted-foreground mb-4">
+                A new version of my portfolio built with Vite and React, featuring improved animations and interactions.
+              </p>
+              <Button 
+                asChild 
+                className="w-full"
+                variant="default"
+              >
+                <a 
+                  href="http://localhost:5173" 
+                  target="_blank" 
+                  rel="noopener noreferrer"
+                  onClick={(e) => {
+                    e.preventDefault()
+                    window.open('http://localhost:5173', '_blank', 'noopener,noreferrer')
+                  }}
+                >
+                  View Project
+                </a>
+              </Button>
+            </CardContent>
+          </Card>
+        </motion.div>
         {[1, 2, 3, 4, 5].map((i) => (
           <Card key={i} className="overflow-hidden">
             <CardHeader>
