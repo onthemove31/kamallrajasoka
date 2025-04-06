@@ -78,15 +78,6 @@ const Navbar = ({ activeSection, onNavClick }: NavbarProps = {}) => {
             Projects
           </Link>
           <Link 
-            to="/photography" 
-            className={`hover:text-foreground transition-colors duration-200 relative ${
-              activeSection === "photography" ? "text-foreground" : "text-foreground/80"
-            } after:absolute after:bottom-[-6px] after:left-0 after:h-[2px] after:w-0 after:bg-primary after:transition-all after:duration-300 hover:after:w-full`}
-            onClick={() => handleNavClick("photography")}
-          >
-            Photography
-          </Link>
-          <Link 
             to="/insights" 
             className={`hover:text-foreground transition-colors duration-200 relative ${
               activeSection === "insights" ? "text-foreground" : "text-foreground/80"
@@ -138,16 +129,6 @@ const Navbar = ({ activeSection, onNavClick }: NavbarProps = {}) => {
               }}
             >
               Projects
-            </Link>
-            <Link 
-              to="/photography" 
-              className={`hover:text-foreground transition-colors duration-200 ${activeSection === "photography" ? "text-foreground" : "text-foreground/80"}`}
-              onClick={() => {
-                handleNavClick("photography");
-                setIsMobileMenuOpen(false);
-              }}
-            >
-              Photography
             </Link>
             <Link 
               to="/insights" 
