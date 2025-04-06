@@ -16,7 +16,7 @@ const ProjectDetail = () => {
   useEffect(() => {
     const fetchContent = async () => {
       try {
-        const response = await fetch(`/src/content/projects/${projectId}.md`);
+        const response = await fetch(`/content/projects/${projectId}.md`);
         if (!response.ok) {
           throw new Error('Project not found');
         }
