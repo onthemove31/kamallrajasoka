@@ -21,6 +21,10 @@ const ProjectDetail = () => {
           throw new Error('Project not found');
         }
         const text = await response.text();
+        // Check if the response is HTML (error page) instead of markdown
+        if (text.includes('<!DOCTYPE html>') || text.includes('<html>')) {
+          throw new Error('Invalid content type');
+        }
         setContent(text);
       } catch (error) {
         console.error('Failed to load project content:', error);
@@ -30,7 +34,11 @@ const ProjectDetail = () => {
       }
     };
 
-    fetchContent();
+    if (projectId) {
+      fetchContent();
+    } else {
+      navigate('/projects');
+    }
   }, [projectId, navigate]);
 
   useEffect(() => {
