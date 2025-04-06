@@ -7,6 +7,7 @@ import Home from "@/pages/Home";
 import Projects from "@/pages/Projects";
 import ProjectDetail from "@/pages/ProjectDetail";
 import Insights from "@/pages/Insights";
+import About from "@/pages/About";
 import NotFound from "@/pages/NotFound";
 
 function App() {
@@ -18,6 +19,7 @@ function App() {
           <main className="pt-20">
             <Routes>
               <Route path="/" element={<Home />} />
+              <Route path="/about" element={<About />} />
               <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:id" element={<ProjectDetail />} />
               <Route path="/insights" element={<Insights />} />

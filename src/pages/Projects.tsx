@@ -6,7 +6,6 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Github, ExternalLink } from "lucide-react";
-import Footer from "@/components/footer";
 import { useNavigate } from "react-router-dom";
 
 interface Project {
@@ -193,7 +192,6 @@ const Projects = () => {
           ))}
         </Tabs>
       </div>
-      <Footer />
     </div>
   );
 };

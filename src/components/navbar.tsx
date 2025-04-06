@@ -2,7 +2,8 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { ThemeToggle } from "./theme-toggle";
 import { Link } from "react-router-dom";
-import { Menu } from "lucide-react";
+import { Menu, X } from "lucide-react";
+import { useTheme } from "@/components/theme-provider";
 
 interface NavbarProps {
   activeSection?: string;
@@ -14,6 +15,7 @@ const Navbar = ({ activeSection, onNavClick }: NavbarProps = {}) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [scrollDirection, setScrollDirection] = useState<'up' | 'down' | null>(null);
   const [lastScrollY, setLastScrollY] = useState(0);
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -63,7 +65,11 @@ const Navbar = ({ activeSection, onNavClick }: NavbarProps = {}) => {
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" className="flex items-center">
-          <span className="text-xl font-bold">KA</span>
+          <img 
+            src={theme === 'dark' ? '/images/logo_dark.png' : '/images/logo_light.png'} 
+            alt="Kamallraj Asoka"
+            className="h-8 w-auto"
+          />
         </Link>
 
         {/* Navigation Links - Desktop */}

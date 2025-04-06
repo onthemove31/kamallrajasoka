@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/navbar";
-import Footer from "@/components/footer";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { 
@@ -155,6 +154,10 @@ const Insights = () => {
   // Colors for charts
   const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'];
   
+  useEffect(() => {
+    console.log("Insights page loaded");
+  }, []);
+
   return (
     <div className="min-h-screen bg-background">
       <Navbar activeSection={activeSection} onNavClick={scrollToSection} />
@@ -510,7 +513,6 @@ const Insights = () => {
           </TabsContent>
         </Tabs>
       </div>
-      <Footer />
     </div>
   );
 };

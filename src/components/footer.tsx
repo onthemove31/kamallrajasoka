@@ -1,42 +1,42 @@
-import { ArrowRight, Twitter, Github, Linkedin } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
 import { Link } from "react-router-dom";
+import { Github, Twitter, Linkedin } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { useTheme } from "@/components/theme-provider";
 
 const Footer = () => {
+  const { theme } = useTheme();
+  
   return (
-    <footer className="mt-20 border-t border-border pt-16 pb-10">
+    <footer className="bg-background py-12 mt-20 border-t">
       <div className="container mx-auto px-4">
-        {/* Footer Top Section */}
-        <div className="grid grid-cols-1 md:grid-cols-5 gap-8 mb-16">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-8 mb-12">
           {/* Personal Info */}
-          <div className="md:col-span-2">
-            <div className="mb-4 font-bold text-2xl">KA</div>
+          <div className="md:col-span-6">
+            <div className="mb-6">
+              <img 
+                src={theme === 'dark' ? '/images/logo_dark.png' : '/images/logo_light.png'} 
+                alt="Kamallraj Asoka"
+                className="h-10 w-auto"
+              />
+            </div>
             <p className="text-muted-foreground mb-6 max-w-md">
               Developer, photographer, and creator with a passion for building useful tools
-              and capturing moments that tell stories.
             </p>
             <div className="flex space-x-4">
-              <Button variant="outline" size="icon" className="rounded-full" asChild>
-                <a href="https://twitter.com" target="_blank" rel="noopener noreferrer">
-                  <Twitter className="h-4 w-4" />
-                </a>
+              <Button variant="ghost" size="icon">
+                <Github className="h-5 w-5" />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-full" asChild>
-                <a href="https://github.com" target="_blank" rel="noopener noreferrer">
-                  <Github className="h-4 w-4" />
-                </a>
+              <Button variant="ghost" size="icon">
+                <Twitter className="h-5 w-5" />
               </Button>
-              <Button variant="outline" size="icon" className="rounded-full" asChild>
-                <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer">
-                  <Linkedin className="h-4 w-4" />
-                </a>
+              <Button variant="ghost" size="icon">
+                <Linkedin className="h-5 w-5" />
               </Button>
             </div>
           </div>
           
           {/* Footer Navigation */}
-          <div>
+          <div className="md:col-span-3">
             <h3 className="font-semibold mb-4">Projects</h3>
             <ul className="space-y-3">
               <li><Link to="/projects" className="text-muted-foreground hover:text-foreground">All Projects</Link></li>
@@ -47,18 +47,7 @@ const Footer = () => {
             </ul>
           </div>
           
-          <div>
-            <h3 className="font-semibold mb-4">Photography</h3>
-            <ul className="space-y-3">
-              <li><Link to="/photography" className="text-muted-foreground hover:text-foreground">Gallery</Link></li>
-              <li><Link to="/photography?category=urban" className="text-muted-foreground hover:text-foreground">Urban</Link></li>
-              <li><Link to="/photography?category=nature" className="text-muted-foreground hover:text-foreground">Nature</Link></li>
-              <li><Link to="/photography?category=travel" className="text-muted-foreground hover:text-foreground">Travel</Link></li>
-              <li><Link to="/photography?category=prints" className="text-muted-foreground hover:text-foreground">Prints</Link></li>
-            </ul>
-          </div>
-          
-          <div>
+          <div className="md:col-span-3">
             <h3 className="font-semibold mb-4">Connect</h3>
             <ul className="space-y-3">
               <li><Link to="/about" className="text-muted-foreground hover:text-foreground">About</Link></li>
@@ -70,17 +59,17 @@ const Footer = () => {
           </div>
         </div>
         
-        <Separator className="mb-8" />
-        
-        {/* Footer Bottom Section */}
-        <div className="flex flex-col md:flex-row justify-between items-center">
+        <div className="flex flex-col md:flex-row justify-between items-center pt-8 border-t">
           <div className="text-sm text-muted-foreground mb-4 md:mb-0">
-            © 2025 KA. All rights reserved.
+            © 2025 Kamallraj Asoka. All rights reserved.
           </div>
           <div className="flex space-x-6 text-sm">
-            <Link to="/privacy" className="text-muted-foreground hover:text-foreground">Privacy Policy</Link>
-            <Link to="/terms" className="text-muted-foreground hover:text-foreground">Terms of Service</Link>
-            <Link to="/sitemap" className="text-muted-foreground hover:text-foreground">Sitemap</Link>
+            <Link to="/privacy" className="text-muted-foreground hover:text-foreground">
+              Privacy Policy
+            </Link>
+            <Link to="/terms" className="text-muted-foreground hover:text-foreground">
+              Terms of Service
+            </Link>
           </div>
         </div>
       </div>

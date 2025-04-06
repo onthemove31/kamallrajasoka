@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import Navbar from '@/components/navbar';
-import Footer from '@/components/footer';
 import MarkdownContent from '@/components/MarkdownContent';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
@@ -65,7 +64,6 @@ const ProjectDetail = () => {
           </div>
         )}
       </div>
-      <Footer />
     </div>
   );
 };
