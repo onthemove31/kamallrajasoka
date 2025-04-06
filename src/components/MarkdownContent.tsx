@@ -47,12 +47,12 @@ const MarkdownContent: FC<MarkdownContentProps> = ({ content, className }) => {
             </a>
           ),
           img: ({ src, alt }) => (
-            <AnimatedSection delay={400}>
-              <div className="my-6 transform transition-all duration-500 hover:scale-[1.02]">
+            <div className="my-6 animate-fade-in">
+              <div className="transform transition-all duration-500 hover:scale-[1.02]">
                 <img src={src} alt={alt} className="rounded-lg shadow-md w-full" />
                 {alt && <p className="text-sm text-muted-foreground text-center mt-2 italic">{alt}</p>}
               </div>
-            </AnimatedSection>
+            </div>
           ),
           ul: ({ children }) => (
             <AnimatedSection delay={500}>

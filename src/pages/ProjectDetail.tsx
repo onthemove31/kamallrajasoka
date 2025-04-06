@@ -7,39 +7,73 @@ import { ChevronLeft } from 'lucide-react';
 import AnimatedSection from '@/components/animated-section';
 
 const ProjectDetail = () => {
-  const { projectId } = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchContent = async () => {
+    const loadContent = async () => {
+      if (!id) {
+        setError('No project ID provided');
+        setLoading(false);
+        return;
+      }
+
       try {
-        const response = await fetch(`/content/projects/${projectId}.md`);
+        console.log(`Attempting to fetch project ${id}`);
+        
+        // First try the public directory
+        let response = await fetch(`/content/projects/${id}.md`);
+        
+        // If that fails, try the src directory
         if (!response.ok) {
-          throw new Error('Project not found');
+          response = await fetch(`/src/content/projects/${id}.md`);
         }
+        
+        console.log('Fetch response:', response.status, response.statusText);
+        
+        if (!response.ok) {
+          throw new Error(`Failed to load project content: ${response.status} ${response.statusText}`);
+        }
+        
         const text = await response.text();
-        // Check if the response is HTML (error page) instead of markdown
+        
+        // Check if we got HTML instead of markdown
         if (text.includes('<!DOCTYPE html>') || text.includes('<html>')) {
-          throw new Error('Invalid content type');
+          throw new Error('Received HTML instead of markdown content');
         }
+        
+        console.log('Content loaded successfully');
         setContent(text);
+        setError(null);
       } catch (error) {
         console.error('Failed to load project content:', error);
-        navigate('/projects');
+        setError(error instanceof Error ? error.message : 'Failed to load project');
       } finally {
         setLoading(false);
       }
     };
 
-    if (projectId) {
-      fetchContent();
-    } else {
-      navigate('/projects');
+    loadContent();
+  }, [id]);
+
+  // Don't navigate immediately on error, give user a chance to see the error
+  useEffect(() => {
+    let timeoutId: number;
+    if (error && !loading) {
+      timeoutId = window.setTimeout(() => {
+        navigate('/projects');
+      }, 2000);
     }
-  }, [projectId, navigate]);
+    return () => {
+      if (timeoutId) {
+        window.clearTimeout(timeoutId);
+      }
+    };
+  }, [error, loading, navigate]);
 
   useEffect(() => {
     setIsLoaded(true);
@@ -63,6 +97,10 @@ const ProjectDetail = () => {
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          </div>
+        ) : error ? (
+          <div className="flex items-center justify-center min-h-[400px] text-muted-foreground">
+            {error}
           </div>
         ) : (
           <div className="max-w-4xl mx-auto">
