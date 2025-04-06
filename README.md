@@ -1,4 +1,4 @@
-# Kamal L Rajasoka - Personal Portfolio
+# Personal Portfolio
 
 Welcome to my personal portfolio website! This modern, responsive site showcases my projects, insights, and professional journey.
 
