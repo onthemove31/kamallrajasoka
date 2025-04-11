@@ -22,6 +22,17 @@ interface Project {
 }
 
 const projectsData: Project[] = [
+  {
+    id: 11,
+    title: "Chat Muse",
+    description: "A whimsical WhatsApp chat analyzer that turns your conversations into insights, art, and entertainment.",
+    longDescription: "Chat Muse is a playful yet powerful tool that transforms your WhatsApp chat exports into meaningful (and sometimes meaningless) visualizations. From sentiment analysis to Shakespearean drama conversion, it helps you discover patterns in your messaging habits, create artistic representations of your conversations, and even train chatbots that talk like you. Features include emotional forensics, chat-based content generation, automated response analysis, and the creation of personal chat time capsules.",
+    tags: ["React", "TypeScript", "NLP", "Data Visualization"],
+    status: "in-progress",
+    category: "analytics",
+    github: "https://github.com/example/chat-muse",
+    demo: "https://chat-muse.example.com"
+  },
   // Game Tracker Category
   {
     id: 1,
