@@ -1,4 +1,3 @@
-
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -11,6 +10,7 @@ interface Project {
   description: string;
   tags: string[];
   status: "in-progress" | "shipped" | "ghosted";
+  slug: string;
 }
 
 const projectData: Project[] = [
@@ -20,6 +20,7 @@ const projectData: Project[] = [
     description: "Track your gaming habits and discover patterns in your play style.",
     tags: ["React", "Firebase", "Steam API"],
     status: "in-progress",
+    slug: "game-tracker"
   },
   {
     id: 2,
@@ -27,6 +28,7 @@ const projectData: Project[] = [
     description: "AI-powered photo organization tool for photographers.",
     tags: ["Python", "TensorFlow", "Flask"],
     status: "shipped",
+    slug: "photo-organizer"
   },
   {
     id: 3,
@@ -34,6 +36,7 @@ const projectData: Project[] = [
     description: "Raspberry Pi-based weather station with custom dashboard.",
     tags: ["Raspberry Pi", "Python", "IoT"],
     status: "shipped",
+    slug: "pi-weather-station"
   },
   {
     id: 4,
@@ -41,6 +44,7 @@ const projectData: Project[] = [
     description: "Create pixel art from your photos with customizable styles.",
     tags: ["JavaScript", "Canvas API"],
     status: "ghosted",
+    slug: "pixel-art-generator"
   },
 ];
 
@@ -105,7 +109,7 @@ const ProjectsPreview = () => {
                     asChild
                     className="group hover:bg-primary/10 transition-all duration-300"
                   >
-                    <Link to={`/projects/${project.id}`}>
+                    <Link to={`/projects/${project.slug}`}>
                       View details
                       <span className="ml-1 transform transition-transform group-hover:translate-x-1">→</span>
                     </Link>

@@ -19,12 +19,14 @@ interface Project {
   github?: string;
   demo?: string;
   image?: string;
+  slug: string;
 }
 
 const projectsData: Project[] = [
   {
     id: 11,
     title: "Chat Muse",
+    slug: "chat-muse",
     description: "A whimsical WhatsApp chat analyzer that turns your conversations into insights, art, and entertainment.",
     longDescription: "Chat Muse is a playful yet powerful tool that transforms your WhatsApp chat exports into meaningful (and sometimes meaningless) visualizations. From sentiment analysis to Shakespearean drama conversion, it helps you discover patterns in your messaging habits, create artistic representations of your conversations, and even train chatbots that talk like you. Features include emotional forensics, chat-based content generation, automated response analysis, and the creation of personal chat time capsules.",
     tags: ["React", "TypeScript", "NLP", "Data Visualization"],
@@ -33,10 +35,10 @@ const projectsData: Project[] = [
     github: "https://github.com/example/chat-muse",
     demo: "https://chat-muse.example.com"
   },
-  // Game Tracker Category
   {
     id: 1,
     title: "Game Tracker",
+    slug: "game-tracker",
     description: "Track your gaming habits and discover patterns in your play style.",
     longDescription: "A comprehensive tool that integrates with Steam, Epic, and other gaming platforms to provide insights into your gaming habits. Features include play time tracking, achievement progress, and personalized recommendations.",
     tags: ["React", "Firebase", "Steam API"],
@@ -48,17 +50,17 @@ const projectsData: Project[] = [
   {
     id: 2,
     title: "Achievement Hunter",
+    slug: "achievement-hunter",
     description: "Gamify your gaming with achievement tracking across platforms.",
     longDescription: "Cross-platform achievement tracking application that helps gamers organize and prioritize which achievements to pursue next. Includes statistics, leaderboards, and achievement guides.",
     tags: ["Vue", "Node.js", "MongoDB"],
     status: "shipped",
     category: "game-tracker"
   },
-  
-  // Photography Projects Category
   {
     id: 3,
     title: "Photo Organizer",
+    slug: "photo-organizer",
     description: "AI-powered photo organization tool for photographers.",
     longDescription: "An intelligent photo management system that uses machine learning to categorize, tag, and organize your photo library. Features facial recognition, scene detection, and automated album creation.",
     tags: ["Python", "TensorFlow", "Flask"],
@@ -68,17 +70,17 @@ const projectsData: Project[] = [
   {
     id: 4,
     title: "Film Emulation Presets",
+    slug: "film-emulation-presets",
     description: "Digital presets that mimic classic film stocks.",
     longDescription: "A collection of meticulously crafted Lightroom and Photoshop presets that accurately simulate the look and feel of vintage film stocks. Includes popular emulsions from Kodak, Fujifilm, and Ilford.",
     tags: ["Lightroom", "Photoshop", "Photography"],
     status: "shipped",
     category: "photography"
   },
-  
-  // Raspberry Pi Category
   {
     id: 5,
     title: "Pi Weather Station",
+    slug: "pi-weather-station",
     description: "Raspberry Pi-based weather station with custom dashboard.",
     longDescription: "A DIY weather station built on Raspberry Pi that collects temperature, humidity, pressure, and air quality data. Features a web-based dashboard for data visualization and historical trends.",
     tags: ["Raspberry Pi", "Python", "IoT"],
@@ -88,17 +90,17 @@ const projectsData: Project[] = [
   {
     id: 6,
     title: "Home Automation Hub",
+    slug: "home-automation-hub",
     description: "Centralized system for controlling smart home devices.",
     longDescription: "A Raspberry Pi-powered hub that integrates various smart home platforms into a single, unified interface. Compatible with Philips Hue, Nest, Sonos, and more.",
     tags: ["Raspberry Pi", "Node.js", "MQTT"],
     status: "in-progress",
     category: "raspberry-pi"
   },
-  
-  // Web Apps & Games Category
   {
     id: 7,
     title: "Pixel Art Generator",
+    slug: "pixel-art-generator",
     description: "Create pixel art from your photos with customizable styles.",
     longDescription: "A web application that transforms regular images into pixel art with adjustable resolution, color palette, and special effects. Ideal for game developers and digital artists.",
     tags: ["JavaScript", "Canvas API"],
@@ -108,17 +110,17 @@ const projectsData: Project[] = [
   {
     id: 8,
     title: "Browser Text Adventure",
+    slug: "browser-text-adventure",
     description: "Interactive fiction game built with modern web technologies.",
     longDescription: "A text-based adventure game that runs in the browser with rich narrative branching, inventory system, and dynamic storytelling. Features a custom game engine that allows for complex interactions.",
     tags: ["React", "TypeScript", "Redux"],
     status: "shipped",
     category: "web-apps"
   },
-  
-  // Analytics Dashboards Category
   {
     id: 9,
     title: "Personal Finance Tracker",
+    slug: "personal-finance-tracker",
     description: "Visualize and analyze personal spending habits.",
     longDescription: "A comprehensive dashboard for tracking personal finances, including expense categorization, budget planning, and interactive charts showing spending trends over time.",
     tags: ["Vue", "D3.js", "Firebase"],
@@ -128,6 +130,7 @@ const projectsData: Project[] = [
   {
     id: 10,
     title: "Fitness Progress Dashboard",
+    slug: "fitness-progress-dashboard",
     description: "Track and visualize workout results and body metrics.",
     longDescription: "An analytics platform for fitness enthusiasts to monitor workout performance, body measurements, and nutritional intake. Features goal setting, progress tracking, and predictive modeling.",
     tags: ["React", "Chart.js", "MongoDB"],
@@ -159,7 +162,7 @@ const Projects = () => {
   };
 
   const handleProjectClick = (project: Project) => {
-    navigate(`/projects/${project.id}`);
+    navigate(`/projects/${project.slug}`);
   };
 
   return (

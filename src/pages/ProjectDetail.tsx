@@ -7,7 +7,7 @@ import { ChevronLeft } from 'lucide-react';
 import AnimatedSection from '@/components/animated-section';
 
 const ProjectDetail = () => {
-  const { id } = useParams();
+  const { slug } = useParams();
   const navigate = useNavigate();
   const [content, setContent] = useState<string>('');
   const [loading, setLoading] = useState(true);
@@ -16,24 +16,22 @@ const ProjectDetail = () => {
 
   useEffect(() => {
     const loadContent = async () => {
-      if (!id) {
-        setError('No project ID provided');
+      if (!slug) {
+        setError('No project slug provided');
         setLoading(false);
         return;
       }
 
       try {
-        console.log(`Attempting to fetch project ${id}`);
+        console.log(`Attempting to fetch project ${slug}`);
         
         // First try the public directory
-        let response = await fetch(`/content/projects/${id}.md`);
+        let response = await fetch(`/content/projects/${slug}.md`);
         
         // If that fails, try the src directory
         if (!response.ok) {
-          response = await fetch(`/src/content/projects/${id}.md`);
+          response = await fetch(`/src/content/projects/${slug}.md`);
         }
-        
-        console.log('Fetch response:', response.status, response.statusText);
         
         if (!response.ok) {
           throw new Error(`Failed to load project content: ${response.status} ${response.statusText}`);
@@ -46,7 +44,6 @@ const ProjectDetail = () => {
           throw new Error('Received HTML instead of markdown content');
         }
         
-        console.log('Content loaded successfully');
         setContent(text);
         setError(null);
       } catch (error) {
@@ -58,9 +55,8 @@ const ProjectDetail = () => {
     };
 
     loadContent();
-  }, [id]);
+  }, [slug]);
 
-  // Don't navigate immediately on error, give user a chance to see the error
   useEffect(() => {
     let timeoutId: number;
     if (error && !loading) {
@@ -93,7 +89,7 @@ const ProjectDetail = () => {
             Back to Projects
           </Button>
         </AnimatedSection>
-        
+
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">
             <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
@@ -114,4 +110,4 @@ const ProjectDetail = () => {
   );
 };
 
-export default ProjectDetail; 
+export default ProjectDetail;
