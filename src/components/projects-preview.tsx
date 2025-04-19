@@ -13,23 +13,23 @@ interface HashnodeArticle {
   url: string;
   coverImage: string | null;
   tags: { name: string }[];
-  dateAdded: string;
+  publishedAt: string;
 }
 
 const fetchHashnodeArticles = async (): Promise<HashnodeArticle[]> => {
   const query = `{
     publication(host: \"lenslogic.hashnode.dev\") {
-      posts(page: 1) {
+      posts(first: 4) {
         edges {
           node {
-            _id
+            id
             title
             brief
             slug
             url
-            coverImage
+            coverImage { url }
             tags { name }
-            dateAdded
+            publishedAt
           }
         }
       }
@@ -42,14 +42,14 @@ const fetchHashnodeArticles = async (): Promise<HashnodeArticle[]> => {
   });
   const data = await response.json();
   return data.data.publication.posts.edges.map((edge: any) => ({
-    id: edge.node._id,
+    id: edge.node.id,
     title: edge.node.title,
     brief: edge.node.brief,
     slug: edge.node.slug,
     url: edge.node.url,
-    coverImage: edge.node.coverImage,
+    coverImage: edge.node.coverImage?.url,
     tags: edge.node.tags,
-    dateAdded: edge.node.dateAdded
+    publishedAt: edge.node.publishedAt
   }));
 };
 
@@ -113,7 +113,7 @@ const ProjectsPreview = () => {
                         Read on Hashnode
                       </a>
                     </Button>
-                    <span className="text-xs text-muted-foreground">{new Date(article.dateAdded).toLocaleDateString()}</span>
+                    <span className="text-xs text-muted-foreground">{new Date(article.publishedAt).toLocaleDateString()}</span>
                   </CardFooter>
                 </Card>
               </AnimatedSection>
