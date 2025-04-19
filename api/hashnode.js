@@ -4,11 +4,22 @@ export default async function handler(req, res) {
     return;
   }
 
+  let body = req.body;
+  // Parse body if it's a string (Vercel quirk)
+  if (typeof body === 'string') {
+    try {
+      body = JSON.parse(body);
+    } catch (e) {
+      res.status(400).json({ error: 'Invalid JSON' });
+      return;
+    }
+  }
+
   try {
     const response = await fetch('https://gql.hashnode.com/', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(req.body),
+      body: JSON.stringify(body),
     });
     const data = await response.json();
     res.status(200).json(data);
