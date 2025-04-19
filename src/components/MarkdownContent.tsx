@@ -4,7 +4,6 @@ import remarkGfm from 'remark-gfm';
 import rehypeRaw from 'rehype-raw';
 import rehypeSanitize from 'rehype-sanitize';
 import { cn } from '@/lib/utils';
-import AnimatedSection from './animated-section';
 
 interface MarkdownContentProps {
   content: string;
@@ -17,24 +16,16 @@ const MarkdownContent: FC<MarkdownContentProps> = ({ content, className }) => {
       <ReactMarkdown
         components={{
           h1: ({ children }) => (
-            <AnimatedSection>
-              <h1 className="text-4xl font-bold mb-6 text-foreground">{children}</h1>
-            </AnimatedSection>
+            <h1 className="text-4xl font-bold mb-6 text-foreground">{children}</h1>
           ),
           h2: ({ children }) => (
-            <AnimatedSection delay={100}>
-              <h2 className="text-3xl font-semibold mt-8 mb-4 text-foreground">{children}</h2>
-            </AnimatedSection>
+            <h2 className="text-3xl font-semibold mt-8 mb-4 text-foreground">{children}</h2>
           ),
           h3: ({ children }) => (
-            <AnimatedSection delay={200}>
-              <h3 className="text-2xl font-semibold mt-6 mb-3 text-foreground">{children}</h3>
-            </AnimatedSection>
+            <h3 className="text-2xl font-semibold mt-6 mb-3 text-foreground">{children}</h3>
           ),
           p: ({ children }) => (
-            <AnimatedSection delay={300}>
-              <p className="text-muted-foreground mb-4">{children}</p>
-            </AnimatedSection>
+            <p className="text-muted-foreground mb-4">{children}</p>
           ),
           a: ({ href, children }) => (
             <a 
@@ -47,8 +38,8 @@ const MarkdownContent: FC<MarkdownContentProps> = ({ content, className }) => {
             </a>
           ),
           img: ({ src, alt }) => (
-            <div className="my-6 animate-fade-in">
-              <div className="transform transition-all duration-500 hover:scale-[1.02]">
+            <div className="my-6">
+              <div>
                 <img src={src} alt={alt} className="rounded-lg shadow-md w-full" />
                 {alt && <p className="text-sm text-muted-foreground text-center mt-2 italic">{alt}</p>}
               </div>
@@ -69,11 +60,9 @@ const MarkdownContent: FC<MarkdownContentProps> = ({ content, className }) => {
             </code>
           ),
           blockquote: ({ children }) => (
-            <AnimatedSection delay={700}>
-              <blockquote className="border-l-4 border-primary pl-4 italic my-4 transform transition-all duration-300 hover:translate-x-1">
-                {children}
-              </blockquote>
-            </AnimatedSection>
+            <blockquote className="border-l-4 border-primary pl-4 italic my-4">
+              {children}
+            </blockquote>
           ),
         }}
         remarkPlugins={[remarkGfm]}
@@ -85,4 +74,4 @@ const MarkdownContent: FC<MarkdownContentProps> = ({ content, className }) => {
   );
 };
 
-export default MarkdownContent; 
+export default MarkdownContent;
