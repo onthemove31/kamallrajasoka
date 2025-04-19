@@ -30,7 +30,9 @@ const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle
         coverImage { url }
         tags { name }
         publishedAt
-        contentMarkdown
+        content {
+          markdown
+        }
       }
     }
   }`;
@@ -40,7 +42,9 @@ const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle
     body: JSON.stringify({ query })
   });
   const data = await response.json();
-  if (!data || !data.data || !data.data.publication || !data.data.publication.post) return null;
+  console.log('Hashnode article detail response:', data);
+  if (!data || !data.data || !data.data.publication) throw new Error('No publication found');
+  if (!data.data.publication.post) throw new Error('No article found for this slug');
   const node = data.data.publication.post;
   return {
     id: node.id,
@@ -51,7 +55,7 @@ const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle
     coverImage: node.coverImage?.url,
     tags: node.tags,
     publishedAt: node.publishedAt,
-    contentMarkdown: node.contentMarkdown,
+    contentMarkdown: node.content.markdown,
   };
 };
 
