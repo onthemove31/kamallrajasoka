@@ -35,7 +35,7 @@ const fetchHashnodeArticles = async (): Promise<HashnodeArticle[]> => {
       }
     }
   }`;
-  const response = await fetch("https://gql.hashnode.com/", {
+  const response = await fetch("/api/hashnode", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query })
