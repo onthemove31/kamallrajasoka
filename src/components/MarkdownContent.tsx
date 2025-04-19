@@ -56,16 +56,16 @@ const MarkdownContent: FC<MarkdownContentProps> = ({ content, className }) => {
           ),
           ul: ({ children }) => (
             <AnimatedSection delay={500}>
-              <ul className="list-disc list-inside mb-4 text-muted-foreground">{children}</ul>
+              <ul className="list-disc list-inside mb-4 pl-4 text-muted-foreground">{children}</ul>
             </AnimatedSection>
           ),
           ol: ({ children }) => (
             <AnimatedSection delay={600}>
-              <ol className="list-decimal list-inside mb-4 text-muted-foreground">{children}</ol>
+              <ol className="list-decimal list-inside mb-4 pl-4 text-muted-foreground">{children}</ol>
             </AnimatedSection>
           ),
           li: ({ children }) => (
-            <li className="mb-2 transform transition-all duration-300 hover:translate-x-1">{children}</li>
+            <li className="mb-1 ml-6 pl-2 list-disc text-muted-foreground">{children}</li>
           ),
           code: ({ children }) => (
             <code className="bg-muted text-foreground px-1.5 py-0.5 rounded transition-colors duration-300 hover:bg-primary/10">
