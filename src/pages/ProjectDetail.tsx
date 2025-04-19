@@ -40,7 +40,7 @@ const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle
     body: JSON.stringify({ query })
   });
   const data = await response.json();
-  if (!data.data.publication.post) return null;
+  if (!data || !data.data || !data.data.publication || !data.data.publication.post) return null;
   const node = data.data.publication.post;
   return {
     id: node.id,
