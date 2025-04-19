@@ -14,7 +14,7 @@ interface HashnodeArticle {
   url: string;
   coverImage: string | null;
   tags: { name: string }[];
-  dateAdded: string;
+  publishedAt: string;
   contentMarkdown: string;
 }
 
@@ -22,19 +22,19 @@ const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle
   const query = `{
     publication(host: \"lenslogic.hashnode.dev\") {
       post(slug: \"${slug}\") {
-        _id
+        id
         title
         brief
         slug
         url
-        coverImage
+        coverImage { url }
         tags { name }
-        dateAdded
+        publishedAt
         contentMarkdown
       }
     }
   }`;
-  const response = await fetch("https://gql.hashnode.com/", {
+  const response = await fetch("/api/hashnode", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ query })
@@ -43,14 +43,14 @@ const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle
   if (!data.data.publication.post) return null;
   const node = data.data.publication.post;
   return {
-    id: node._id,
+    id: node.id,
     title: node.title,
     brief: node.brief,
     slug: node.slug,
     url: node.url,
-    coverImage: node.coverImage,
+    coverImage: node.coverImage?.url,
     tags: node.tags,
-    dateAdded: node.dateAdded,
+    publishedAt: node.publishedAt,
     contentMarkdown: node.contentMarkdown,
   };
 };
@@ -138,7 +138,7 @@ const ProjectDetail = () => {
                 {article.tags.map(tag => (
                   <span key={tag.name} className="bg-accent px-3 py-1 rounded text-xs font-medium text-muted-foreground">{tag.name}</span>
                 ))}
-                <span className="text-xs text-muted-foreground ml-auto">{new Date(article.dateAdded).toLocaleDateString()}</span>
+                <span className="text-xs text-muted-foreground ml-auto">{new Date(article.publishedAt).toLocaleDateString()}</span>
               </div>
               <MarkdownContent content={article.contentMarkdown} />
             </AnimatedSection>
