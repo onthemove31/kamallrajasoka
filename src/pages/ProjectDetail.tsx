@@ -6,10 +6,59 @@ import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 import AnimatedSection from '@/components/animated-section';
 
+interface HashnodeArticle {
+  id: string;
+  title: string;
+  brief: string;
+  slug: string;
+  url: string;
+  coverImage: string | null;
+  tags: { name: string }[];
+  dateAdded: string;
+  contentMarkdown: string;
+}
+
+const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle | null> => {
+  const query = `{
+    publication(host: \"lenslogic.hashnode.dev\") {
+      post(slug: \"${slug}\") {
+        _id
+        title
+        brief
+        slug
+        url
+        coverImage
+        tags { name }
+        dateAdded
+        contentMarkdown
+      }
+    }
+  }`;
+  const response = await fetch("https://gql.hashnode.com/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query })
+  });
+  const data = await response.json();
+  if (!data.data.publication.post) return null;
+  const node = data.data.publication.post;
+  return {
+    id: node._id,
+    title: node.title,
+    brief: node.brief,
+    slug: node.slug,
+    url: node.url,
+    coverImage: node.coverImage,
+    tags: node.tags,
+    dateAdded: node.dateAdded,
+    contentMarkdown: node.contentMarkdown,
+  };
+};
+
 const ProjectDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const [content, setContent] = useState<string>('');
+  const [article, setArticle] = useState<HashnodeArticle | null>(null);
   const [loading, setLoading] = useState(true);
   const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -17,43 +66,23 @@ const ProjectDetail = () => {
   useEffect(() => {
     const loadContent = async () => {
       if (!slug) {
-        setError('No project slug provided');
+        setError('No article slug provided');
         setLoading(false);
         return;
       }
-
       try {
-        console.log(`Attempting to fetch project ${slug}`);
-        
-        // First try the public directory
-        let response = await fetch(`/content/projects/${slug}.md`);
-        
-        // If that fails, try the src directory
-        if (!response.ok) {
-          response = await fetch(`/src/content/projects/${slug}.md`);
+        const result = await fetchHashnodeArticleBySlug(slug);
+        if (!result) {
+          throw new Error('Article not found');
         }
-        
-        if (!response.ok) {
-          throw new Error(`Failed to load project content: ${response.status} ${response.statusText}`);
-        }
-        
-        const text = await response.text();
-        
-        // Check if we got HTML instead of markdown
-        if (text.includes('<!DOCTYPE html>') || text.includes('<html>')) {
-          throw new Error('Received HTML instead of markdown content');
-        }
-        
-        setContent(text);
+        setArticle(result);
         setError(null);
       } catch (error) {
-        console.error('Failed to load project content:', error);
-        setError(error instanceof Error ? error.message : 'Failed to load project');
+        setError(error instanceof Error ? error.message : 'Failed to load article');
       } finally {
         setLoading(false);
       }
     };
-
     loadContent();
   }, [slug]);
 
@@ -98,13 +127,23 @@ const ProjectDetail = () => {
           <div className="flex items-center justify-center min-h-[400px] text-muted-foreground">
             {error}
           </div>
-        ) : (
+        ) : article ? (
           <div className="max-w-4xl mx-auto">
             <AnimatedSection delay={100}>
-              <MarkdownContent content={content} />
+              {article.coverImage && (
+                <img src={article.coverImage} alt={article.title} className="w-full h-64 object-cover rounded mb-6" />
+              )}
+              <h1 className="text-3xl md:text-4xl font-bold mb-2">{article.title}</h1>
+              <div className="flex flex-wrap gap-2 mb-4">
+                {article.tags.map(tag => (
+                  <span key={tag.name} className="bg-accent px-3 py-1 rounded text-xs font-medium text-muted-foreground">{tag.name}</span>
+                ))}
+                <span className="text-xs text-muted-foreground ml-auto">{new Date(article.dateAdded).toLocaleDateString()}</span>
+              </div>
+              <MarkdownContent content={article.contentMarkdown} />
             </AnimatedSection>
           </div>
-        )}
+        ) : null}
       </div>
     </div>
   );

@@ -1,250 +1,121 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Navbar from "@/components/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { Github, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
-interface Project {
-  id: number;
+interface HashnodeArticle {
+  id: string;
   title: string;
-  description: string;
-  longDescription?: string;
-  tags: string[];
-  status: "in-progress" | "shipped" | "ghosted";
-  category: string;
-  github?: string;
-  demo?: string;
-  image?: string;
+  brief: string;
   slug: string;
+  url: string;
+  coverImage: string | null;
+  tags: { name: string }[];
+  dateAdded: string;
 }
 
-const projectsData: Project[] = [
-  {
-    id: 11,
-    title: "Chat Muse",
-    slug: "chat-muse",
-    description: "A whimsical WhatsApp chat analyzer that turns your conversations into insights, art, and entertainment.",
-    longDescription: "Chat Muse is a playful yet powerful tool that transforms your WhatsApp chat exports into meaningful (and sometimes meaningless) visualizations. From sentiment analysis to Shakespearean drama conversion, it helps you discover patterns in your messaging habits, create artistic representations of your conversations, and even train chatbots that talk like you. Features include emotional forensics, chat-based content generation, automated response analysis, and the creation of personal chat time capsules.",
-    tags: ["React", "TypeScript", "NLP", "Data Visualization"],
-    status: "in-progress",
-    category: "analytics",
-    github: "https://github.com/example/chat-muse",
-    demo: "https://chat-muse.example.com"
-  },
-  {
-    id: 1,
-    title: "Game Tracker",
-    slug: "game-tracker",
-    description: "Track your gaming habits and discover patterns in your play style.",
-    longDescription: "A comprehensive tool that integrates with Steam, Epic, and other gaming platforms to provide insights into your gaming habits. Features include play time tracking, achievement progress, and personalized recommendations.",
-    tags: ["React", "Firebase", "Steam API"],
-    status: "in-progress",
-    category: "game-tracker",
-    github: "https://github.com/example/game-tracker",
-    demo: "https://demo.example.com/game-tracker"
-  },
-  {
-    id: 2,
-    title: "Achievement Hunter",
-    slug: "achievement-hunter",
-    description: "Gamify your gaming with achievement tracking across platforms.",
-    longDescription: "Cross-platform achievement tracking application that helps gamers organize and prioritize which achievements to pursue next. Includes statistics, leaderboards, and achievement guides.",
-    tags: ["Vue", "Node.js", "MongoDB"],
-    status: "shipped",
-    category: "game-tracker"
-  },
-  {
-    id: 3,
-    title: "Photo Organizer",
-    slug: "photo-organizer",
-    description: "AI-powered photo organization tool for photographers.",
-    longDescription: "An intelligent photo management system that uses machine learning to categorize, tag, and organize your photo library. Features facial recognition, scene detection, and automated album creation.",
-    tags: ["Python", "TensorFlow", "Flask"],
-    status: "shipped",
-    category: "photography"
-  },
-  {
-    id: 4,
-    title: "Film Emulation Presets",
-    slug: "film-emulation-presets",
-    description: "Digital presets that mimic classic film stocks.",
-    longDescription: "A collection of meticulously crafted Lightroom and Photoshop presets that accurately simulate the look and feel of vintage film stocks. Includes popular emulsions from Kodak, Fujifilm, and Ilford.",
-    tags: ["Lightroom", "Photoshop", "Photography"],
-    status: "shipped",
-    category: "photography"
-  },
-  {
-    id: 5,
-    title: "Pi Weather Station",
-    slug: "pi-weather-station",
-    description: "Raspberry Pi-based weather station with custom dashboard.",
-    longDescription: "A DIY weather station built on Raspberry Pi that collects temperature, humidity, pressure, and air quality data. Features a web-based dashboard for data visualization and historical trends.",
-    tags: ["Raspberry Pi", "Python", "IoT"],
-    status: "shipped",
-    category: "raspberry-pi"
-  },
-  {
-    id: 6,
-    title: "Home Automation Hub",
-    slug: "home-automation-hub",
-    description: "Centralized system for controlling smart home devices.",
-    longDescription: "A Raspberry Pi-powered hub that integrates various smart home platforms into a single, unified interface. Compatible with Philips Hue, Nest, Sonos, and more.",
-    tags: ["Raspberry Pi", "Node.js", "MQTT"],
-    status: "in-progress",
-    category: "raspberry-pi"
-  },
-  {
-    id: 7,
-    title: "Pixel Art Generator",
-    slug: "pixel-art-generator",
-    description: "Create pixel art from your photos with customizable styles.",
-    longDescription: "A web application that transforms regular images into pixel art with adjustable resolution, color palette, and special effects. Ideal for game developers and digital artists.",
-    tags: ["JavaScript", "Canvas API"],
-    status: "ghosted",
-    category: "web-apps"
-  },
-  {
-    id: 8,
-    title: "Browser Text Adventure",
-    slug: "browser-text-adventure",
-    description: "Interactive fiction game built with modern web technologies.",
-    longDescription: "A text-based adventure game that runs in the browser with rich narrative branching, inventory system, and dynamic storytelling. Features a custom game engine that allows for complex interactions.",
-    tags: ["React", "TypeScript", "Redux"],
-    status: "shipped",
-    category: "web-apps"
-  },
-  {
-    id: 9,
-    title: "Personal Finance Tracker",
-    slug: "personal-finance-tracker",
-    description: "Visualize and analyze personal spending habits.",
-    longDescription: "A comprehensive dashboard for tracking personal finances, including expense categorization, budget planning, and interactive charts showing spending trends over time.",
-    tags: ["Vue", "D3.js", "Firebase"],
-    status: "in-progress",
-    category: "analytics"
-  },
-  {
-    id: 10,
-    title: "Fitness Progress Dashboard",
-    slug: "fitness-progress-dashboard",
-    description: "Track and visualize workout results and body metrics.",
-    longDescription: "An analytics platform for fitness enthusiasts to monitor workout performance, body measurements, and nutritional intake. Features goal setting, progress tracking, and predictive modeling.",
-    tags: ["React", "Chart.js", "MongoDB"],
-    status: "ghosted",
-    category: "analytics"
-  }
-];
+const fetchHashnodeArticles = async (): Promise<HashnodeArticle[]> => {
+  const query = `{
+    publication(host: \"lenslogic.hashnode.dev\") {
+      posts(page: 1) {
+        edges {
+          node {
+            _id
+            title
+            brief
+            slug
+            url
+            coverImage
+            tags { name }
+            dateAdded
+          }
+        }
+      }
+    }
+  }`;
 
-const getStatusEmoji = (status: string) => {
-  switch (status) {
-    case "in-progress":
-      return "🚧";
-    case "shipped":
-      return "✅";
-    case "ghosted":
-      return "💤";
-    default:
-      return "";
-  }
+  const response = await fetch("https://gql.hashnode.com/", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ query })
+  });
+  const data = await response.json();
+  return data.data.publication.posts.edges.map((edge: any) => ({
+    id: edge.node._id,
+    title: edge.node.title,
+    brief: edge.node.brief,
+    slug: edge.node.slug,
+    url: edge.node.url,
+    coverImage: edge.node.coverImage,
+    tags: edge.node.tags,
+    dateAdded: edge.node.dateAdded
+  }));
 };
 
 const Projects = () => {
   const [activeSection, setActiveSection] = useState("projects");
-  const navigate = useNavigate();
+  const [articles, setArticles] = useState<HashnodeArticle[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchHashnodeArticles()
+      .then(setArticles)
+      .catch(() => setError("Failed to load articles from Hashnode."))
+      .finally(() => setLoading(false));
+  }, []);
 
   const scrollToSection = (section: string) => {
-    console.log(`Would scroll to ${section} if this was the main page`);
     setActiveSection(section);
-  };
-
-  const handleProjectClick = (project: Project) => {
-    navigate(`/projects/${project.slug}`);
   };
 
   return (
     <div className="min-h-screen bg-background">
       <Navbar activeSection={activeSection} onNavClick={scrollToSection} />
       <div className="container mx-auto px-4 py-12 pt-28">
-        <h1 className="text-4xl font-bold mb-8">Projects</h1>
-        <p className="text-lg text-muted-foreground mb-10 max-w-2xl">
-          A collection of projects I've worked on, ranging from web applications to Raspberry Pi experiments. 
-          Some are completed, some are works in progress, and some were lovingly abandoned.
-        </p>
-        
-        <Tabs defaultValue="all" className="w-full">
-          <TabsList className="grid grid-cols-3 md:grid-cols-6 mb-8">
-            <TabsTrigger value="all">All</TabsTrigger>
-            <TabsTrigger value="game-tracker">Game Tracker</TabsTrigger>
-            <TabsTrigger value="photography">Photography</TabsTrigger>
-            <TabsTrigger value="raspberry-pi">Raspberry Pi</TabsTrigger>
-            <TabsTrigger value="web-apps">Web Apps</TabsTrigger>
-            <TabsTrigger value="analytics">Analytics</TabsTrigger>
-          </TabsList>
-          
-          <TabsContent value="all" className="mt-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {projectsData.map((project) => (
-                <ProjectCard key={project.id} project={project} onSelect={() => handleProjectClick(project)} />
-              ))}
-            </div>
-          </TabsContent>
-          
-          {["game-tracker", "photography", "raspberry-pi", "web-apps", "analytics"].map((category) => (
-            <TabsContent key={category} value={category} className="mt-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {projectsData
-                  .filter((project) => project.category === category)
-                  .map((project) => (
-                    <ProjectCard key={project.id} project={project} onSelect={() => handleProjectClick(project)} />
-                  ))}
-              </div>
-            </TabsContent>
-          ))}
-        </Tabs>
+        <h1 className="text-4xl font-bold mb-8 text-center">Blog Projects</h1>
+        {loading ? (
+          <div className="text-center text-lg">Loading articles...</div>
+        ) : error ? (
+          <div className="text-center text-red-500">{error}</div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {articles.map(article => (
+              <Card key={article.id} className="hover:shadow-lg transition-shadow cursor-pointer">
+                <Link to={`/projects/${article.slug}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  {article.coverImage && (
+                    <img src={article.coverImage} alt={article.title} className="w-full h-48 object-cover rounded-t" />
+                  )}
+                  <CardHeader>
+                    <CardTitle className="flex items-center justify-between">
+                      {article.title}
+                    </CardTitle>
+                    <CardDescription>{article.brief}</CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {article.tags.map(tag => (
+                        <Badge key={tag.name} variant="secondary">{tag.name}</Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                  <CardFooter className="flex justify-between items-center">
+                    <span className="text-xs text-muted-foreground">{new Date(article.dateAdded).toLocaleDateString()}</span>
+                  </CardFooter>
+                </Link>
+              </Card>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );
 };
-
-const ProjectCard = ({ project, onSelect }: { project: Project; onSelect: () => void }) => (
-  <Card className="hover:shadow-lg transition-shadow cursor-pointer" onClick={onSelect}>
-    <CardHeader>
-      <CardTitle className="flex items-center justify-between">
-        {project.title}
-        <span className="text-xl ml-2">{getStatusEmoji(project.status)}</span>
-      </CardTitle>
-      <CardDescription>{project.description}</CardDescription>
-    </CardHeader>
-    <CardContent>
-      <div className="flex flex-wrap gap-2">
-        {project.tags.map((tag) => (
-          <Badge key={tag} variant="secondary">
-            {tag}
-          </Badge>
-        ))}
-      </div>
-    </CardContent>
-    <CardFooter className="flex justify-end gap-2">
-      {project.github && (
-        <Button variant="outline" size="icon" asChild>
-          <a href={project.github} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-            <Github className="h-4 w-4" />
-          </a>
-        </Button>
-      )}
-      {project.demo && (
-        <Button variant="outline" size="icon" asChild>
-          <a href={project.demo} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()}>
-            <ExternalLink className="h-4 w-4" />
-          </a>
-        </Button>
-      )}
-    </CardFooter>
-  </Card>
-);
 
 export default Projects;
