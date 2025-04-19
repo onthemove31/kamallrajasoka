@@ -4,7 +4,6 @@ import Navbar from '@/components/navbar';
 import MarkdownContent from '@/components/MarkdownContent';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
-import AnimatedSection from '@/components/animated-section';
 
 interface HashnodeArticle {
   id: string;
@@ -112,16 +111,14 @@ const ProjectDetail = () => {
     <div className={`min-h-screen bg-background transition-opacity duration-700 ${isLoaded ? 'opacity-100' : 'opacity-0'}`}>
       <Navbar activeSection="projects" onNavClick={() => {}} />
       <div className="container mx-auto px-4 py-12 pt-28">
-        <AnimatedSection direction="left">
-          <Button
-            variant="ghost"
-            className="mb-6 group hover:bg-primary/10 transition-all duration-300"
-            onClick={() => navigate('/projects')}
-          >
-            <ChevronLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
-            Back to Projects
-          </Button>
-        </AnimatedSection>
+        <Button
+          variant="ghost"
+          className="mb-6 group hover:bg-primary/10 transition-all duration-300"
+          onClick={() => navigate('/projects')}
+        >
+          <ChevronLeft className="mr-2 h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to Projects
+        </Button>
 
         {loading ? (
           <div className="flex items-center justify-center min-h-[400px]">
@@ -133,19 +130,17 @@ const ProjectDetail = () => {
           </div>
         ) : article ? (
           <div className="max-w-4xl mx-auto">
-            <AnimatedSection delay={100}>
-              {article.coverImage && (
-                <img src={article.coverImage} alt={article.title} className="w-full h-64 object-cover rounded mb-6" />
-              )}
-              <h1 className="text-3xl md:text-4xl font-bold mb-2">{article.title}</h1>
-              <div className="flex flex-wrap gap-2 mb-4">
-                {article.tags.map(tag => (
-                  <span key={tag.name} className="bg-accent px-3 py-1 rounded text-xs font-medium text-muted-foreground">{tag.name}</span>
-                ))}
-                <span className="text-xs text-muted-foreground ml-auto">{new Date(article.publishedAt).toLocaleDateString()}</span>
-              </div>
-              <MarkdownContent content={article.contentMarkdown} />
-            </AnimatedSection>
+            {article.coverImage && (
+              <img src={article.coverImage} alt={article.title} className="w-full h-64 object-cover rounded mb-6" />
+            )}
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">{article.title}</h1>
+            <div className="flex flex-wrap gap-2 mb-4">
+              {article.tags.map(tag => (
+                <span key={tag.name} className="bg-accent px-3 py-1 rounded text-xs font-medium text-muted-foreground">{tag.name}</span>
+              ))}
+              <span className="text-xs text-muted-foreground ml-auto">{new Date(article.publishedAt).toLocaleDateString()}</span>
+            </div>
+            <MarkdownContent content={article.contentMarkdown} />
           </div>
         ) : null}
       </div>
