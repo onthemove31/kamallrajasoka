@@ -46,6 +46,7 @@ const fetchHashnodeArticles = async (): Promise<HashnodeArticle[]> => {
     body: JSON.stringify({ query })
   });
   const data = await response.json();
+  console.log("Hashnode API response:", data); // Debug: log full response
   return data.data.publication.posts.edges.map((edge: any) => ({
     id: edge.node.id,
     title: edge.node.title,
