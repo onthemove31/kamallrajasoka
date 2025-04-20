@@ -1,13 +1,19 @@
 import { useState, useEffect } from "react";
 import Navbar from "@/components/navbar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { ExternalLink } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
+
+function decodeHtmlEntities(str: string) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
 
 interface WordpressPost {
   id: number;
@@ -57,7 +63,7 @@ const Projects = () => {
               <Card key={post.id} className="hover:shadow-lg transition-shadow">
                 <Link to={`/projects/${post.slug}`} className="block">
                   <CardHeader>
-                    <CardTitle>{post.title.rendered.replace(/<[^>]+>/g, '')}</CardTitle>
+                    <CardTitle>{decodeHtmlEntities(post.title.rendered.replace(/<[^>]+>/g, ''))}</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div

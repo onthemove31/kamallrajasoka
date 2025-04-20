@@ -5,6 +5,12 @@ import { ExternalLink } from "lucide-react";
 import { Link } from "react-router-dom";
 import AnimatedSection from "./animated-section";
 
+function decodeHtmlEntities(str: string) {
+  const txt = document.createElement('textarea');
+  txt.innerHTML = str;
+  return txt.value;
+}
+
 interface WordpressPost {
   id: number;
   date: string;
@@ -54,7 +60,7 @@ const ProjectsPreview = () => {
                 <Card className="group overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-500 hover:shadow-lg hover:-translate-y-1">
                   <Link to={`/projects/${post.slug}`} className="block">
                     <CardHeader>
-                      <CardTitle>{post.title.rendered.replace(/<[^>]+>/g, '')}</CardTitle>
+                      <CardTitle>{decodeHtmlEntities(post.title.rendered.replace(/<[^>]+>/g, ''))}</CardTitle>
                     </CardHeader>
                     <CardContent>
                       <div
