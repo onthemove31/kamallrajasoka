@@ -22,6 +22,7 @@ export default async function handler(req, res) {
       body: JSON.stringify(body),
     });
     const data = await response.json();
+    res.setHeader('Cache-Control', 'no-store'); // Prevent Vercel from caching
     res.status(200).json(data);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch from Hashnode', details: error.message });
