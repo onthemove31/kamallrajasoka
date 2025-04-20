@@ -22,6 +22,7 @@ export default async function handler(req, res) {
       body: JSON.stringify(body),
     });
     const data = await response.json();
+    console.log("Hashnode API (server-side) response:", JSON.stringify(data, null, 2)); // Debug log
     res.setHeader('Cache-Control', 'no-store'); // Prevent Vercel from caching
     res.status(200).json(data);
   } catch (error) {
