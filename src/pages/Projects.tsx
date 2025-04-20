@@ -40,6 +40,8 @@ const fetchHashnodeArticles = async (): Promise<HashnodeArticle[]> => {
     }
   }`;
 
+  console.log("Hashnode GraphQL Query:", query); // Debug: log the query
+
   const response = await fetch("/api/hashnode", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -47,6 +49,14 @@ const fetchHashnodeArticles = async (): Promise<HashnodeArticle[]> => {
   });
   const data = await response.json();
   console.log("Hashnode API response:", data); // Debug: log full response
+  if (data?.data?.publication?.posts?.edges) {
+    console.log(`Number of articles returned: ${data.data.publication.posts.edges.length}`);
+    data.data.publication.posts.edges.forEach((edge: any, i: number) => {
+      console.log(`Article #${i+1}: ID=${edge.node.id}, Title=\"${edge.node.title}\"`);
+    });
+  } else {
+    console.warn("No articles returned or unexpected response structure.", data);
+  }
   return data.data.publication.posts.edges.map((edge: any) => ({
     id: edge.node.id,
     title: edge.node.title,
