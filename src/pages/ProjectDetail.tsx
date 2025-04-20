@@ -1,92 +1,45 @@
-import { useEffect, useState } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import Navbar from '@/components/navbar';
-import MarkdownContent from '@/components/MarkdownContent';
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
+import Navbar from "@/components/navbar";
+import MarkdownContent from "@/components/MarkdownContent";
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
 
-interface HashnodeArticle {
-  id: string;
-  title: string;
-  brief: string;
+interface WordpressPost {
+  id: number;
+  date: string;
+  title: { rendered: string };
+  content: { rendered: string };
   slug: string;
-  url: string;
-  coverImage: string | null;
-  tags: { name: string }[];
-  publishedAt: string;
-  contentMarkdown: string;
+  link: string;
+  _embedded?: { [key: string]: any };
 }
 
-const fetchHashnodeArticleBySlug = async (slug: string): Promise<HashnodeArticle | null> => {
-  const query = `{
-    publication(host: \"lenslogic.hashnode.dev\") {
-      post(slug: \"${slug}\") {
-        id
-        title
-        brief
-        slug
-        url
-        coverImage { url }
-        tags { name }
-        publishedAt
-        content {
-          markdown
-        }
-      }
-    }
-  }`;
-  const response = await fetch("/api/hashnode", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ query })
-  });
-  const data = await response.json();
-  console.log('Hashnode article detail response:', data);
-  if (!data || !data.data || !data.data.publication) throw new Error('No publication found');
-  if (!data.data.publication.post) throw new Error('No article found for this slug');
-  const node = data.data.publication.post;
-  return {
-    id: node.id,
-    title: node.title,
-    brief: node.brief,
-    slug: node.slug,
-    url: node.url,
-    coverImage: node.coverImage?.url,
-    tags: node.tags,
-    publishedAt: node.publishedAt,
-    contentMarkdown: node.content.markdown,
-  };
+const fetchWordpressPostBySlug = async (slug: string): Promise<WordpressPost | null> => {
+  const response = await fetch(`/api/wordpress?slug=${slug}`);
+  if (!response.ok) throw new Error("Failed to fetch post from WordPress");
+  const posts = await response.json();
+  return posts.length > 0 ? posts[0] : null;
 };
 
 const ProjectDetail = () => {
   const { slug } = useParams();
   const navigate = useNavigate();
-  const [article, setArticle] = useState<HashnodeArticle | null>(null);
+  const [post, setPost] = useState<WordpressPost | null>(null);
   const [loading, setLoading] = useState(true);
-  const [isLoaded, setIsLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    const loadContent = async () => {
-      if (!slug) {
-        setError('No article slug provided');
-        setLoading(false);
-        return;
-      }
-      try {
-        const result = await fetchHashnodeArticleBySlug(slug);
-        if (!result) {
-          throw new Error('Article not found');
-        }
-        setArticle(result);
-        setError(null);
-      } catch (error) {
-        setError(error instanceof Error ? error.message : 'Failed to load article');
-      } finally {
-        setLoading(false);
-      }
-    };
-    loadContent();
+    if (!slug) {
+      setError('No post slug provided');
+      setLoading(false);
+      return;
+    }
+    fetchWordpressPostBySlug(slug)
+      .then(setPost)
+      .catch(() => setError("Failed to load post from WordPress."))
+      .finally(() => setLoading(false));
   }, [slug]);
 
   useEffect(() => {
@@ -128,21 +81,22 @@ const ProjectDetail = () => {
           <div className="flex items-center justify-center min-h-[400px] text-muted-foreground">
             {error}
           </div>
-        ) : article ? (
+        ) : post ? (
           <div className="max-w-4xl mx-auto">
-            {article.coverImage && (
-              <img src={article.coverImage} alt={article.title} className="w-full h-64 object-cover rounded mb-6" />
-            )}
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">{article.title}</h1>
-            <div className="flex flex-wrap gap-2 mb-4">
-              {article.tags.map(tag => (
-                <span key={tag.name} className="bg-accent px-3 py-1 rounded text-xs font-medium text-muted-foreground">{tag.name}</span>
-              ))}
-              <span className="text-xs text-muted-foreground ml-auto">{new Date(article.publishedAt).toLocaleDateString()}</span>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">{post.title.rendered.replace(/<[^>]+>/g, '')}</h1>
+            <div className="text-xs text-muted-foreground mb-4">
+              {new Date(post.date).toLocaleDateString()}
             </div>
-            <MarkdownContent content={article.contentMarkdown} />
+            <MarkdownContent content={post.content.rendered} />
+            <div className="mt-8">
+              <a href={post.link} target="_blank" rel="noopener noreferrer" className="text-primary underline">
+                View on WordPress
+              </a>
+            </div>
           </div>
-        ) : null}
+        ) : (
+          <div>Post not found.</div>
+        )}
       </div>
     </div>
   );
